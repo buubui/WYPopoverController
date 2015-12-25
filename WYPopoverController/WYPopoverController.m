@@ -187,6 +187,13 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 @dynamic wy_embedInPopover;
 
 + (void)load {
+  if (WY_IS_TEST_MODE) {
+    return;
+  }
+  [self exchangeImplementations];
+}
+
++ (void)exchangeImplementations {
   Method original, swizzle;
 
   original = class_getInstanceMethod(self, @selector(pushViewController:animated:));
@@ -302,8 +309,14 @@ static char const * const UINavigationControllerEmbedInPopoverTagKey = "UINaviga
 @implementation UIViewController (WYPopover)
 
 + (void)load {
-  Method original, swizzle;
+  if (WY_IS_TEST_MODE) {
+    return;
+  }
+  [self exchangeImplementations];
+}
 
++ (void)exchangeImplementations {
+  Method original, swizzle;
 #pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated"
   original = class_getInstanceMethod(self, @selector(setContentSizeForViewInPopover:));
@@ -974,9 +987,9 @@ static float edgeSizeFromCornerRadius(float cornerRadius) {
   [super setNeedsDisplay];
 
   [self.layer setNeedsDisplay];
-    
+
   self.alpha = self.preferredAlpha;
-    
+
   if (_innerView) {
     _innerView.gradientTopColor = self.fillTopColor;
     _innerView.gradientBottomColor = self.fillBottomColor;
@@ -2647,7 +2660,7 @@ static WYPopoverTheme *defaultTheme_ = nil;
   float keyboardHeight = WYKeyboardListener.rect.size.height;
   float overlayWidth = _overlayView.bounds.size.width;
   float overlayHeight = _overlayView.bounds.size.height;
-  
+
   if (!_ignoreOrientation && UIInterfaceOrientationIsLandscape(orientation)) {
     keyboardHeight = WYKeyboardListener.rect.size.width;
     overlayWidth = _overlayView.bounds.size.height;

@@ -38,6 +38,10 @@
 #define WY_POPOVER_MIN_SIZE                      CGSizeMake(240, 160)
 #endif
 
+#ifndef WY_IS_TEST_MODE
+#define WY_IS_TEST_MODE    ([[[NSProcessInfo processInfo] environment] objectForKey: @"XCInjectBundle"] != nil)
+#endif
+
 typedef NS_OPTIONS(NSUInteger, WYPopoverArrowDirection) {
   WYPopoverArrowDirectionUp = 1UL << 0,
   WYPopoverArrowDirectionDown = 1UL << 1,
